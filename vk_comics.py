@@ -11,11 +11,11 @@ token = os.getenv("TOKEN")
 group_id = os.getenv("GROUP_ID")
 VERSION_VK = 5.131
 logging.basicConfig(
-        level=logging.WARNING,
-        filename="logs.log",
-        filemode="w",
-        format="%(asctime)s - [%(levelname)s] - %(message)s",
-    )
+    level=logging.WARNING,
+    filename="logs.log",
+    filemode="w",
+    format="%(asctime)s - [%(levelname)s] - %(message)s",
+)
 
 
 def get_image_comics():
@@ -45,11 +45,12 @@ def get_params_for_save_photo():
 
 def save_photo():
     params_for_save_photo, _ = get_params_for_save_photo()
-    payload_save_image = {"access_token": token, "v": VERSION_VK,
-            "hash": params_for_save_photo["hash"],
-            "photo": params_for_save_photo["photo"],
-            "server": params_for_save_photo["server"],
-        }
+    payload_save_image = {
+        "access_token": token, "v": VERSION_VK,
+        "hash": params_for_save_photo["hash"],
+        "photo": params_for_save_photo["photo"],
+        "server": params_for_save_photo["server"],
+    }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     url_photos = requests.post(url_save_photo, params=payload_save_image)
     return url_photos.json()
@@ -62,13 +63,14 @@ def get_id_numbers():
     for unpacking_id_number in id_numbers:
         photo_id, owner_id = unpacking_id_number
         signed = 1
-        payload_wall = {"access_token": token, "v": VERSION_VK,
-                              "filter": "suggests, postponed",
-                              "from_group": signed,
-                              "owner_id": group_id,
-                              "attachments": f"photo{owner_id}_{photo_id}",
-                              "message": title,
-                              }
+        payload_wall = {
+            "access_token": token, "v": VERSION_VK,
+            "filter": "suggests, postponed",
+            "from_group": signed,
+            "owner_id": group_id,
+            "attachments": f"photo{owner_id}_{photo_id}",
+            "message": title,
+        }
 
         url_wall_get = f"https://api.vk.com/method/wall.post"
         requests.post(url_wall_get, params=payload_wall)
