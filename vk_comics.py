@@ -43,7 +43,7 @@ def get_params_for_save_photo():
         return params_for_save_photo.json(), title
 
 
-def save_photo():
+def saves_photo():
     params_for_save_photo, _ = get_params_for_save_photo()
     payload_save_image = {
         "access_token": token, "v": VERSION_VK,
@@ -57,7 +57,7 @@ def save_photo():
 
 
 def get_id_numbers():
-    url_photos = save_photo()
+    url_photos = saves_photo()
     _, title = get_params_for_save_photo()
     id_numbers = [(id_number["id"], id_number["owner_id"]) for id_number in url_photos["response"]]
     for unpacking_id_number in id_numbers:
