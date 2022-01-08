@@ -37,7 +37,6 @@ pip3 install -r requirements.txt
 - Create an application using the link: [`TOKEN`](https://dev.vk.com).
 - Click "Edit".
 - Copy the client_id (id) number from the url.
-- Get the token from the parameter: access_token. 
 - Enter in the url - client_id received in the previous step.
 - Follow the completed url:
 
