@@ -11,7 +11,8 @@ def get_image_comics():
     number_comics = random.randint(1, 2560)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     response = requests.get(url)
-    image_comics = requests.get(response.json()["img"])
+    collection_images = response.json()
+    image_comics = requests.get(collection_images["img"])
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
     return response
@@ -19,7 +20,8 @@ def get_image_comics():
 
 def get_params_for_save_photo():
     response = get_image_comics()
-    title = response.json()["alt"]
+    collection_photo = response.json()
+    title = collection_photo["alt"]
     payload = {"access_token": vk_token, "v": VERSION_VK}
     with open("comics.png", "rb") as file:
         files = {
