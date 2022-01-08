@@ -20,7 +20,7 @@ def get_image_comics():
 def get_params_for_save_photo():
     response = get_image_comics()
     title = response.json()["alt"]
-    payload = {"access_token": token, "v": VERSION_VK}
+    payload = {"access_token": vk_token, "v": VERSION_VK}
     with open("comics.png", "rb") as file:
         files = {
             "photo": file,
@@ -35,7 +35,7 @@ def get_params_for_save_photo():
 def saves_photo():
     params_for_save_photo, _ = get_params_for_save_photo()
     payload_save_image = {
-        "access_token": token, "v": VERSION_VK,
+        "access_token": vk_token, "v": VERSION_VK,
         "hash": params_for_save_photo["hash"],
         "photo": params_for_save_photo["photo"],
         "server": params_for_save_photo["server"],
@@ -53,7 +53,7 @@ def get_id_numbers():
         photo_id, owner_id = unpacking_id_number
         signed = 1
         payload_wall = {
-            "access_token": token, "v": VERSION_VK,
+            "access_token": vk_token, "v": VERSION_VK,
             "filter": "suggests, postponed",
             "from_group": signed,
             "owner_id": group_id,
@@ -68,7 +68,7 @@ def get_id_numbers():
 
 if __name__ == "__main__":
     load_dotenv()
-    token = os.getenv("TOKEN")
+    vk_token = os.getenv("VK_TOKEN")
     group_id = os.getenv("GROUP_ID")
     VERSION_VK = 5.131
     logging.basicConfig(
