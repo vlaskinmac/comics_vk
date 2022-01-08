@@ -32,7 +32,7 @@ def get_files_photos():
     return files
 
 
-def get_params_for_save_photo():
+def get_content_for_save_photo():
     files = get_files_photos()
     collection_photo = get_image_comics_content()
     title = collection_photo["alt"]
@@ -46,8 +46,8 @@ def get_params_for_save_photo():
     return params_for_save_photo.json(), title
 
 
-def saves_photo():
-    params_for_save_photo, _ = get_params_for_save_photo()
+def get_content_url_photos():
+    params_for_save_photo, _ = get_content_for_save_photo()
     payload_save_image = {
         "access_token": vk_token, "v": VERSION_VK,
         "hash": params_for_save_photo["hash"],
@@ -60,9 +60,9 @@ def saves_photo():
     return url_photos.json()
 
 
-def get_id_numbers():
-    url_photos = saves_photo()
-    _, title = get_params_for_save_photo()
+def posts_comics():
+    url_photos = get_content_url_photos()
+    _, title = get_content_for_save_photo()
     id_numbers = [(id_number["id"], id_number["owner_id"]) for id_number in url_photos["response"]]
     for unpacking_id_number in id_numbers:
         photo_id, owner_id = unpacking_id_number
@@ -75,11 +75,9 @@ def get_id_numbers():
             "attachments": f"photo{owner_id}_{photo_id}",
             "message": title,
         }
-
         url_wall_get = f"https://api.vk.com/method/wall.post"
         response_wall_post = requests.post(url_wall_get, params=payload_wall)
         response_wall_post.raise_for_status()
-
 
 
 if __name__ == "__main__":
@@ -93,4 +91,4 @@ if __name__ == "__main__":
         filemode="w",
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
-    get_id_numbers()
+    posts_comics()
