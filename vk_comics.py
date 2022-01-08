@@ -6,17 +6,6 @@ import requests
 
 from dotenv import load_dotenv
 
-load_dotenv()
-token = os.getenv("TOKEN")
-group_id = os.getenv("GROUP_ID")
-VERSION_VK = 5.131
-logging.basicConfig(
-    level=logging.WARNING,
-    filename="logs.log",
-    filemode="w",
-    format="%(asctime)s - [%(levelname)s] - %(message)s",
-)
-
 
 def get_image_comics():
     number_comics = random.randint(1, 2560)
@@ -77,4 +66,15 @@ def get_id_numbers():
         os.remove("./comics.png")
 
 
-get_id_numbers()
+if __name__ == "__main__":
+    load_dotenv()
+    token = os.getenv("TOKEN")
+    group_id = os.getenv("GROUP_ID")
+    VERSION_VK = 5.131
+    logging.basicConfig(
+        level=logging.WARNING,
+        filename="logs.log",
+        filemode="w",
+        format="%(asctime)s - [%(levelname)s] - %(message)s",
+    )
+    get_id_numbers()
