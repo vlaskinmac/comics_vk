@@ -29,6 +29,7 @@ def get_params_for_save_photo():
         files = {
             "photo": file,
         }
+        os.remove("./comics.png")
         url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
         get_url_for_upload = requests.get(url_for_upload, params=payload)
         get_url_for_upload.raise_for_status()
@@ -71,7 +72,7 @@ def get_id_numbers():
         url_wall_get = f"https://api.vk.com/method/wall.post"
         response_wall_post = requests.post(url_wall_get, params=payload_wall)
         response_wall_post.raise_for_status()
-        os.remove("./comics.png")
+
 
 
 if __name__ == "__main__":
