@@ -32,9 +32,9 @@ pip3 install -r requirements.txt
 
 ## Getting API keys
 
-**TOKEN**
+**VK TOKEN**
 
-- Create an application using the link: [`TOKEN`](https://dev.vk.com).
+- Create an application using the link: [`VK TOKEN`](https://dev.vk.com).
 - Click "Edit".
 - Copy the client_id (id) number from the url.
 - Enter in the url - client_id received in the previous step.
