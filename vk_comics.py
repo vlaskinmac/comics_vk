@@ -11,8 +11,10 @@ def get_image_comics():
     number_comics = random.randint(1, 2560)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     response = requests.get(url)
+    response.raise_for_status()
     collection_images = response.json()
     image_comics = requests.get(collection_images["img"])
+    image_comics.raise_for_status()
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
     return response
@@ -29,8 +31,10 @@ def get_params_for_save_photo():
         }
         url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
         get_url_for_upload = requests.get(url_for_upload, params=payload)
+        get_url_for_upload.raise_for_status()
         get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
         params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+        params_for_save_photo.raise_for_status()
         return params_for_save_photo.json(), title
 
 
@@ -44,6 +48,7 @@ def saves_photo():
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     url_photos = requests.post(url_save_photo, params=payload_save_image)
+    url_photos.raise_for_status()
     return url_photos.json()
 
 
@@ -64,7 +69,8 @@ def get_id_numbers():
         }
 
         url_wall_get = f"https://api.vk.com/method/wall.post"
-        requests.post(url_wall_get, params=payload_wall)
+        response_wall_post = requests.post(url_wall_get, params=payload_wall)
+        response_wall_post.raise_for_status()
         os.remove("./comics.png")
 
 
