@@ -7,36 +7,43 @@ import requests
 from dotenv import load_dotenv
 
 
-def get_image_comics():
+def get_image_comics_content():
     number_comics = random.randint(1, 2560)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
-    response = requests.get(url)
-    response.raise_for_status()
-    collection_images = response.json()
+    image_comics_content = requests.get(url)
+    image_comics_content.raise_for_status()
+    return image_comics_content.json()
+
+
+def get_image_comics():
+    collection_images = get_image_comics_content()
     image_comics = requests.get(collection_images["img"])
     image_comics.raise_for_status()
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
-    return response
 
 
-def get_params_for_save_photo():
-    response = get_image_comics()
-    collection_photo = response.json()
-    title = collection_photo["alt"]
-    payload = {"access_token": vk_token, "v": VERSION_VK}
+def get_files_photos():
     with open("comics.png", "rb") as file:
         files = {
             "photo": file,
         }
         os.remove("./comics.png")
-        url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
-        get_url_for_upload = requests.get(url_for_upload, params=payload)
-        get_url_for_upload.raise_for_status()
-        get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
-        params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
-        params_for_save_photo.raise_for_status()
-        return params_for_save_photo.json(), title
+    return files
+
+
+def get_params_for_save_photo():
+    files = get_files_photos()
+    collection_photo = get_image_comics_content()
+    title = collection_photo["alt"]
+    payload = {"access_token": vk_token, "v": VERSION_VK}
+    url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
+    get_url_for_upload = requests.get(url_for_upload, params=payload)
+    get_url_for_upload.raise_for_status()
+    get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
+    params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+    params_for_save_photo.raise_for_status()
+    return params_for_save_photo.json(), title
 
 
 def saves_photo():
