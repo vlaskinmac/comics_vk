@@ -7,6 +7,7 @@ import requests
 
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from requests import HTTPError
 
 
 def get_end_page():
@@ -41,10 +42,12 @@ def get_content_for_save_photo():
         "access_token": vk_token,
         "v": VERSION_VK,
         "group_id": group_id,
-        }
+    }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
-    get_url_for_upload = requests.get(url_for_upload, params=payload)
-    get_url_for_upload.raise_for_status()
+    try:
+        get_url_for_upload = requests.get(url_for_upload, params=payload)
+    except HTTPError as exc:
+        logging.warning(exc)
     get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     with open("comics.png", "rb") as file:
         try:
@@ -68,8 +71,10 @@ def get_content_url_photos():
         "group_id": group_id,
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
-    url_photos = requests.post(url_save_photo, params=payload_save_image)
-    url_photos.raise_for_status()
+    try:
+        url_photos = requests.post(url_save_photo, params=payload_save_image)
+    except HTTPError as exc:
+        logging.warning(exc)
     return url_photos.json()
 
 
@@ -85,8 +90,10 @@ def posts_comics():
         "message": title,
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
-    response_wall_post = requests.post(url_wall_get, params=payload_wall)
-    response_wall_post.raise_for_status()
+    try:
+        response_wall_post = requests.post(url_wall_get, params=payload_wall)
+    except HTTPError as exc:
+        logging.warning(exc)
 
 
 if __name__ == "__main__":
