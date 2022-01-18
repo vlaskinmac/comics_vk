@@ -91,7 +91,7 @@ def posts_comics():
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
     try:
-        response_wall_post = requests.post(url_wall_get, params=payload_wall)
+        requests.post(url_wall_get, params=payload_wall)
     except HTTPError as exc:
         logging.warning(exc)
 
