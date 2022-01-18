@@ -2,8 +2,6 @@ import logging
 import os
 import random
 import re
-from urllib.parse import urljoin
-from pprint import pprint
 
 import requests
 
@@ -22,7 +20,6 @@ def get_end_page():
 
 
 def get_image_comics_content():
-    end_page = get_end_page()
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     image_comics_content = requests.get(url)
@@ -31,7 +28,6 @@ def get_image_comics_content():
 
 
 def get_image_title_comics():
-    collection_images = get_image_comics_content()
     image_comics = requests.get(collection_images["img"])
     title_comics = collection_images["alt"]
     image_comics.raise_for_status()
@@ -41,7 +37,6 @@ def get_image_title_comics():
 
 
 def get_content_for_save_photo():
-    title = get_image_title_comics()
     payload = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -60,12 +55,10 @@ def get_content_for_save_photo():
         finally:
             os.remove("./comics.png")
     params_for_save_photo.raise_for_status()
-    return params_for_save_photo.json(), title
+    return params_for_save_photo.json()
 
 
 def get_content_url_photos():
-    params_for_save_photo, _ = get_content_for_save_photo()
-    # pprint(params_for_save_photo)
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -74,19 +67,13 @@ def get_content_url_photos():
         "server": params_for_save_photo["server"],
         "group_id": group_id,
     }
-    # pprint(payload_save_image)
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     url_photos = requests.post(url_save_photo, params=payload_save_image)
     url_photos.raise_for_status()
-
-    # pprint(url_photos.json())
     return url_photos.json()
 
 
 def posts_comics():
-    url_photos = get_content_url_photos()
-    pprint(url_photos['response'][0]['id'])
-    _, title = get_content_for_save_photo()
     signed = 1
     media_id = url_photos['response'][0]['id']
     payload_wall = {
@@ -114,4 +101,10 @@ if __name__ == "__main__":
         filemode="w",
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
+
+    end_page = get_end_page()
+    collection_images = get_image_comics_content()
+    title = get_image_title_comics()
+    params_for_save_photo = get_content_for_save_photo()
+    url_photos = get_content_url_photos()
     posts_comics()
