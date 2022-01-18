@@ -25,10 +25,12 @@ def get_image_comics():
 
 def get_files_photos():
     with open("comics.png", "rb") as file:
-        files = {
-            "photo": file,
-        }
-        os.remove("./comics.png")
+        try:
+            files = {
+                "photo": file,
+            }
+        finally:
+            os.remove("./comics.png")
     return files
 
 
