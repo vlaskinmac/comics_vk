@@ -41,11 +41,8 @@ def get_files_photos():
 
 
 def get_content_for_save_photo():
-    title = get_image_title_comics() # +
+    title = get_image_title_comics()
     files = get_files_photos()
-    # collection_photo = get_image_comics_content()
-    # title = collection_photo["alt"]
-
     payload = {"access_token": vk_token, "v": VERSION_VK}
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     # print(url_for_upload)
