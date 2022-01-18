@@ -30,20 +30,22 @@ def get_files_photos():
     with open("comics.png", "rb") as file:
         try:
             files = {
-                "photo": file.read(),
+                "photo": file,
             }
-
         finally:
-            pass  # +
-            # os.remove("./comics.png")
+            os.remove("./comics.png")
 
-    return files
+        return files
 
 
 def get_content_for_save_photo():
     title = get_image_title_comics()
     files = get_files_photos()
-    payload = {"access_token": vk_token, "v": VERSION_VK}
+    payload = {
+        "access_token": vk_token,
+        "v": VERSION_VK,
+        "group_id": group_id,
+        }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     # print(url_for_upload)
     get_url_for_upload = requests.get(url_for_upload, params=payload)
