@@ -13,34 +13,24 @@ def get_image_comics_content():
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     image_comics_content = requests.get(url)
     image_comics_content.raise_for_status()
+    # pprint(image_comics_content.json())
     return image_comics_content.json()
 
 
 def get_image_title_comics():
     collection_images = get_image_comics_content()
+    # pprint(collection_images)
     image_comics = requests.get(collection_images["img"])
-    title_comics = requests.get(collection_images["alt"])
+    title_comics = collection_images["alt"]
     image_comics.raise_for_status()
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
     return title_comics
 
 
-def get_files_photos():
-    with open("comics.png", "rb") as file:
-        try:
-            files = {
-                "photo": file,
-            }
-        finally:
-            os.remove("./comics.png")
-
-        return files
-
-
 def get_content_for_save_photo():
     title = get_image_title_comics()
-    files = get_files_photos()
+    # files = get_files_photos()
     payload = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -52,7 +42,15 @@ def get_content_for_save_photo():
     get_url_for_upload.raise_for_status()
     get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     # pprint(get_url_for_upload.json())
-    params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+    with open("comics.png", "rb") as file:
+        try:
+            files = {
+                "photo": file,
+            }
+            params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+        finally:
+            os.remove("./comics.png")
+    # pprint(params_for_save_photo.json())
     params_for_save_photo.raise_for_status()
     return params_for_save_photo.json(), title
 
@@ -85,18 +83,18 @@ def posts_comics():
     # id_numbers = [(id_number["id"], id_number["owner_id"]) for id_number in url_photos["response"]]
     # for unpacking_id_number in id_numbers:
     #     photo_id, owner_id = unpacking_id_number
-        signed = 1
-        payload_wall = {
-            "access_token": vk_token, "v": VERSION_VK,
-            "filter": "suggests, postponed",
-            "from_group": signed,
-            "owner_id": group_id,
-            "attachments": f"photo{user_id}_{int(*[i['id'] for i in url_photos['response']])}",
-            "message": title,
-        }
-        url_wall_get = f"https://api.vk.com/method/wall.post"
-        response_wall_post = requests.post(url_wall_get, params=payload_wall)
-        response_wall_post.raise_for_status()
+    signed = 1
+    payload_wall = {
+        "access_token": vk_token, "v": VERSION_VK,
+        "filter": "suggests, postponed",
+        "from_group": signed,
+        "owner_id": group_id,
+        "attachments": f"photo{user_id}_{int(*[i['id'] for i in url_photos['response']])}",
+        "message": title,
+    }
+    url_wall_get = f"https://api.vk.com/method/wall.post"
+    response_wall_post = requests.post(url_wall_get, params=payload_wall)
+    response_wall_post.raise_for_status()
 
 
 if __name__ == "__main__":
