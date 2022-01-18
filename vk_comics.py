@@ -46,19 +46,20 @@ def get_content_for_save_photo():
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     try:
         get_url_for_upload = requests.get(url_for_upload, params=payload)
+        get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     except HTTPError as exc:
         logging.warning(exc)
-    get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
+
     with open("comics.png", "rb") as file:
         try:
             files = {
                 "photo": file,
             }
             params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+            params_for_save_photo.raise_for_status()
+            return params_for_save_photo.json()
         finally:
             os.remove("./comics.png")
-    params_for_save_photo.raise_for_status()
-    return params_for_save_photo.json()
 
 
 def get_content_url_photos():
@@ -73,9 +74,10 @@ def get_content_url_photos():
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     try:
         url_photos = requests.post(url_save_photo, params=payload_save_image)
+        return url_photos.json()
     except HTTPError as exc:
         logging.warning(exc)
-    return url_photos.json()
+
 
 
 def posts_comics():
