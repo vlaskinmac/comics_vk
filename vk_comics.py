@@ -79,7 +79,6 @@ def get_content_url_photos():
         logging.warning(exc)
 
 
-
 def posts_comics():
     signed = 1
     media_id = url_photos['response'][0]['id']
