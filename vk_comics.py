@@ -80,20 +80,18 @@ def posts_comics():
     url_photos = get_content_url_photos()
     # pprint(url_photos)
 
-
-
     _, title = get_content_for_save_photo()
 
-    id_numbers = [(id_number["id"], id_number["owner_id"]) for id_number in url_photos["response"]]
-    for unpacking_id_number in id_numbers:
-        photo_id, owner_id = unpacking_id_number
+    # id_numbers = [(id_number["id"], id_number["owner_id"]) for id_number in url_photos["response"]]
+    # for unpacking_id_number in id_numbers:
+    #     photo_id, owner_id = unpacking_id_number
         signed = 1
         payload_wall = {
             "access_token": vk_token, "v": VERSION_VK,
             "filter": "suggests, postponed",
             "from_group": signed,
             "owner_id": group_id,
-            "attachments": f"photo{owner_id}_{photo_id}",
+            "attachments": f"photo{user_id}_{int(*[i['id'] for i in url_photos['response']])}",
             "message": title,
         }
         url_wall_get = f"https://api.vk.com/method/wall.post"
@@ -103,7 +101,7 @@ def posts_comics():
 
 if __name__ == "__main__":
     load_dotenv()
-    token = os.getenv("VK_TOKEN")
+    vk_token = os.getenv("VK_TOKEN")
     group_id = os.getenv("GROUP_ID")
     user_id = os.getenv("user_id")
     VERSION_VK = 5.131
