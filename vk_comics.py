@@ -76,7 +76,6 @@ def get_content_url_photos():
     return url_photos.json()
 
 
-
 def posts_comics():
     url_photos = get_content_url_photos()
     # pprint(url_photos)
@@ -104,8 +103,9 @@ def posts_comics():
 
 if __name__ == "__main__":
     load_dotenv()
-    vk_token = os.getenv("VK_TOKEN")
+    token = os.getenv("VK_TOKEN")
     group_id = os.getenv("GROUP_ID")
+    user_id = os.getenv("user_id")
     VERSION_VK = 5.131
     logging.basicConfig(
         level=logging.WARNING,
