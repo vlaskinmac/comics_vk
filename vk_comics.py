@@ -80,6 +80,7 @@ def get_content_url_photos(params_for_save_photo):
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     try:
         url_photos = requests.post(url_save_photo, params=payload_save_image)
+        url_photos.raise_for_status()
         return url_photos.json()
     except HTTPError as exc:
         logging.warning(exc)
@@ -99,6 +100,7 @@ def posts_comics(url_photos, title):
     url_wall_get = f"https://api.vk.com/method/wall.post"
     try:
         requests.post(url_wall_get, params=payload_wall)
+        requests.raise_for_status()
     except HTTPError as exc:
         logging.warning(exc)
 
