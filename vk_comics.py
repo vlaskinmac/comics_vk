@@ -21,21 +21,25 @@ def get_end_page():
     return int(end_page)
 
 
-def get_image_comics_content(end_page):
+def get_image_title_comics_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     image_comics_content = requests.get(url)
     image_comics_content.raise_for_status()
-    return image_comics_content.json()
-
-
-def get_image_title_comics(collection_images):
-    link_image_comics, title_comics = [content for content in (collection_images["img"], collection_images["alt"])]
+    link_image_comics, title_comics = [
+        content for content in (
+        image_comics_content.json()["img"],
+        image_comics_content.json()["alt"]
+    )
+    ]
     image_comics = requests.get(link_image_comics)
     image_comics.raise_for_status()
+    return image_comics, title_comics
+
+
+def get_image_file_comics(image_comics):
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
-    return title_comics
 
 
 def get_content_for_save_photo():
@@ -81,7 +85,7 @@ def get_content_url_photos(params_for_save_photo):
         logging.warning(exc)
 
 
-def posts_comics(url_photos):
+def posts_comics(url_photos, title):
     signed = 1
     media_id = url_photos['response'][0]['id']
     payload_wall = {
@@ -113,8 +117,8 @@ if __name__ == "__main__":
     )
 
     end_page = get_end_page()
-    collection_images = get_image_comics_content(end_page)
-    title = get_image_title_comics(collection_images)
+    image_comics, title = get_image_title_comics_content(end_page)
+    get_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(params_for_save_photo)
-    posts_comics(url_photos)
+    posts_comics(url_photos, title)
