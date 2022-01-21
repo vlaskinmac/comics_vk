@@ -65,7 +65,11 @@ def get_content_for_save_photo():
             params_for_save_photo.raise_for_status()
             return params_for_save_photo.json()
         finally:
-            os.remove("./comics.png")
+            deletes_file()
+
+
+def deletes_file():
+    os.remove("./comics.png")
 
 
 def get_content_url_photos(params_for_save_photo):
