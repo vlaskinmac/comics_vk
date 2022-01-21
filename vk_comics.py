@@ -2,6 +2,7 @@ import logging
 import os
 import random
 import re
+from pprint import pprint
 
 import requests
 
@@ -20,7 +21,7 @@ def get_end_page():
     return int(end_page)
 
 
-def get_image_comics_content():
+def get_image_comics_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     image_comics_content = requests.get(url)
@@ -28,7 +29,7 @@ def get_image_comics_content():
     return image_comics_content.json()
 
 
-def get_image_title_comics():
+def get_image_title_comics(collection_images):
     image_comics = requests.get(collection_images["img"])
     title_comics = collection_images["alt"]
     image_comics.raise_for_status()
@@ -46,6 +47,7 @@ def get_content_for_save_photo():
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     try:
         get_url_for_upload = requests.get(url_for_upload, params=payload)
+        pprint(get_url_for_upload.json())
         get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     except HTTPError as exc:
         logging.warning(exc)
@@ -62,7 +64,7 @@ def get_content_for_save_photo():
             os.remove("./comics.png")
 
 
-def get_content_url_photos():
+def get_content_url_photos(params_for_save_photo):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -79,7 +81,7 @@ def get_content_url_photos():
         logging.warning(exc)
 
 
-def posts_comics():
+def posts_comics(url_photos):
     signed = 1
     media_id = url_photos['response'][0]['id']
     payload_wall = {
@@ -111,8 +113,8 @@ if __name__ == "__main__":
     )
 
     end_page = get_end_page()
-    collection_images = get_image_comics_content()
-    title = get_image_title_comics()
+    collection_images = get_image_comics_content(end_page)
+    title = get_image_title_comics(collection_images)
     params_for_save_photo = get_content_for_save_photo()
-    url_photos = get_content_url_photos()
-    posts_comics()
+    url_photos = get_content_url_photos(params_for_save_photo)
+    posts_comics(url_photos)
