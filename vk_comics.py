@@ -8,27 +8,43 @@ from dotenv import load_dotenv
 from requests import HTTPError
 
 
+def check_for_response(response):
+    raise HTTPError(f'{response} - {HTTPError.__name__}')
+
+
 def get_end_page():
-    url = f"https://xkcd.com/info.0.json"
-    image_comics_content = requests.get(url)
-    image_comics_content.raise_for_status()
-    return image_comics_content.json()["num"]
+    url = f"https://xkcd.com/inf.0.json"
+    try:
+        image_comics_content = requests.get(url)
+        check_for_response(image_comics_content)
+        image_comics_content.raise_for_status()
+        return image_comics_content.json()["num"]
+    except HTTPError as exc:
+        logging.warning(exc)
 
 
 def get_image_title_comics_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
-    image_comics_content = requests.get(url)
-    image_comics_content.raise_for_status()
+    try:
+        image_comics_content = requests.get(url)
+        image_comics_content.raise_for_status()
+        check_for_response(image_comics_content)
+    except HTTPError as exc:
+        logging.warning(exc)
     link_image_comics, title_comics = [
         content for content in (
-        image_comics_content.json()["img"],
-        image_comics_content.json()["alt"]
-    )
+            image_comics_content.json()["img"],
+            image_comics_content.json()["alt"]
+        )
     ]
-    image_comics = requests.get(link_image_comics)
-    image_comics.raise_for_status()
-    return image_comics, title_comics
+    try:
+        image_comics = requests.get(link_image_comics)
+        image_comics.raise_for_status()
+        check_for_response(image_comics)
+        return image_comics, title_comics
+    except HTTPError as exc:
+        logging.warning(exc)
 
 
 def get_image_file_comics(image_comics):
@@ -45,6 +61,7 @@ def get_content_for_save_photo():
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     try:
         get_url_for_upload = requests.get(url_for_upload, params=payload)
+        check_for_response(get_url_for_upload)
         get_url_for_upload.raise_for_status()
         get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     except HTTPError as exc:
@@ -56,8 +73,11 @@ def get_content_for_save_photo():
                 "photo": file,
             }
             params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+            check_for_response(params_for_save_photo)
             params_for_save_photo.raise_for_status()
             return params_for_save_photo.json()
+        except HTTPError as exc:
+            logging.warning(exc)
         finally:
             deletes_file()
 
@@ -79,6 +99,7 @@ def get_content_url_photos(params_for_save_photo):
     try:
         url_photos = requests.post(url_save_photo, params=payload_save_image)
         url_photos.raise_for_status()
+        check_for_response(url_photos)
         return url_photos.json()
     except HTTPError as exc:
         logging.warning(exc)
@@ -99,6 +120,7 @@ def posts_comics(url_photos, title):
     try:
         requests.post(url_wall_get, params=payload_wall)
         requests.raise_for_status()
+        check_for_response(requests)
     except HTTPError as exc:
         logging.warning(exc)
 
