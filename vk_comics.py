@@ -1,24 +1,18 @@
 import logging
 import os
 import random
-import re
-from pprint import pprint
 
 import requests
 
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from requests import HTTPError
 
 
 def get_end_page():
-    url = f"https://xkcd.com/"
-    response_xkcd = requests.get(url)
-    response_xkcd.raise_for_status()
-    soup = BeautifulSoup(response_xkcd.text, "lxml")
-    line_with_number = soup.select_one("#middleContainer > a")
-    end_page = re.search("\d+", str(line_with_number)).group()
-    return int(end_page)
+    url = f"https://xkcd.com/info.0.json"
+    image_comics_content = requests.get(url)
+    image_comics_content.raise_for_status()
+    return image_comics_content.json()["num"]
 
 
 def get_image_title_comics_content(end_page):
