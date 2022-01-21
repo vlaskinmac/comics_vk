@@ -30,8 +30,8 @@ def get_image_comics_content(end_page):
 
 
 def get_image_title_comics(collection_images):
-    image_comics = requests.get(collection_images["img"])
-    title_comics = collection_images["alt"]
+    link_image_comics, title_comics = [content for content in (collection_images["img"], collection_images["alt"])]
+    image_comics = requests.get(link_image_comics)
     image_comics.raise_for_status()
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
