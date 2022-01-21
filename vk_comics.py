@@ -51,7 +51,7 @@ def get_content_for_save_photo():
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     try:
         get_url_for_upload = requests.get(url_for_upload, params=payload)
-        pprint(get_url_for_upload.json())
+        get_url_for_upload.raise_for_status()
         get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
     except HTTPError as exc:
         logging.warning(exc)
