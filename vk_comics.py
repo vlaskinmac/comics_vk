@@ -9,15 +9,17 @@ from requests import HTTPError
 
 
 def check_for_response(response):
-    raise HTTPError(f'{response} - {HTTPError.__name__}')
+    if HTTPError().response:
+        raise HTTPError(f'{response} - {HTTPError.__name__}')
 
 
 def get_end_page():
-    url = f"https://xkcd.com/inf.0.json"
+    url = f"https://xkcd.com/info.0.json"
+
     try:
         image_comics_content = requests.get(url)
-        check_for_response(image_comics_content)
         image_comics_content.raise_for_status()
+        check_for_response(image_comics_content)
         return image_comics_content.json()["num"]
     except HTTPError as exc:
         logging.warning(exc)
@@ -140,6 +142,7 @@ if __name__ == "__main__":
 
     end_page = get_end_page()
     image_comics, title = get_image_title_comics_content(end_page)
+    print(image_comics, title)
     get_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(params_for_save_photo)
