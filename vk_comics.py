@@ -15,7 +15,6 @@ def check_for_response(response):
 
 def get_end_page():
     url = f"https://xkcd.com/info.0.json"
-
     try:
         image_comics_content = requests.get(url)
         image_comics_content.raise_for_status()
