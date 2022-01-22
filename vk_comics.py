@@ -13,7 +13,7 @@ def check_for_response(response):
 
 
 def get_end_page():
-    url = f"https://xkcd.com/inf.0.json"
+    url = f"https://xkcd.com/info.0.json"
     try:
         image_comics_content = requests.get(url)
         check_for_response(image_comics_content)
