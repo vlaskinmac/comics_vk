@@ -142,7 +142,6 @@ if __name__ == "__main__":
 
     end_page = get_end_page()
     image_comics, title = get_image_title_comics_content(end_page)
-    print(image_comics, title)
     get_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(params_for_save_photo)
