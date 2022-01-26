@@ -33,12 +33,8 @@ def get_image_title_comics_content(end_page):
         check_for_response(image_content)
     except HTTPError as exc:
         logging.warning(exc)
-    image = image_content.json()["img"]
-    title = image_content.json()["alt"]
-    link_image_comics, title_comics = [
-        content for content in (image, title
-        )
-    ]
+    link_image_comics = image_content.json()["img"]
+    title_comics = image_content.json()["alt"]
     try:
         image_comics = requests.get(link_image_comics)
         image_comics.raise_for_status()
@@ -61,10 +57,10 @@ def get_content_for_save_photo():
     }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     try:
-        get_url_for_upload = requests.get(url_for_upload, params=payload)
-        check_for_response(get_url_for_upload)
-        get_url_for_upload.raise_for_status()
-        get_url_save_photo = get_url_for_upload.json()["response"]["upload_url"]
+        url_for_upload = requests.get(url_for_upload, params=payload)
+        check_for_response(url_for_upload)
+        url_for_upload.raise_for_status()
+        get_url_save_photo = url_for_upload.json()["response"]["upload_url"]
     except HTTPError as exc:
         logging.warning(exc)
 
