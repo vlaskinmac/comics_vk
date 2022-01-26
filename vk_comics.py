@@ -24,7 +24,7 @@ def get_end_page():
         logging.warning(exc)
 
 
-def get_image_title_comics_content(end_page):
+def get_image_title_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     try:
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     )
 
     end_page = get_end_page()
-    image_comics, title = get_image_title_comics_content(end_page)
+    image_comics, title = get_image_title_content(end_page)
     get_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(params_for_save_photo)
