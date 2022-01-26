@@ -44,7 +44,7 @@ def get_image_title_content(end_page):
         logging.warning(exc)
 
 
-def get_image_file_comics(image_comics):
+def save_image_file_comics(image_comics):
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
 
@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
     end_page = get_end_page()
     image_comics, title = get_image_title_content(end_page)
-    get_image_file_comics(image_comics)
+    save_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(params_for_save_photo)
     posts_comics(url_photos, title)
