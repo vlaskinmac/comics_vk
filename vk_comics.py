@@ -80,11 +80,7 @@ def get_content_for_save_photo():
         except HTTPError as exc:
             logging.warning(exc)
         finally:
-            deletes_file()
-
-
-def deletes_file():
-    os.remove("./comics.png")
+            os.remove("./comics.png")
 
 
 def get_content_url_photos(params_for_save_photo):
