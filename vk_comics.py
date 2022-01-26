@@ -33,13 +33,13 @@ def get_image_title_content(end_page):
         check_for_response(image_content)
     except HTTPError as exc:
         logging.warning(exc)
-    link_image_comics = image_content.json()["img"]
-    title_comics = image_content.json()["alt"]
+    image_link = image_content.json()["img"]
+    title = image_content.json()["alt"]
     try:
-        image_comics = requests.get(link_image_comics)
+        image_comics = requests.get(image_link)
         image_comics.raise_for_status()
         check_for_response(image_comics)
-        return image_comics, title_comics
+        return image_comics, title
     except HTTPError as exc:
         logging.warning(exc)
 
