@@ -15,37 +15,27 @@ def check_for_response(response):
 
 def get_end_page():
     url = f"https://xkcd.com/info.0.json"
-    try:
-        image_comics_content = requests.get(url)
-        image_comics_content.raise_for_status()
-        check_for_response(image_comics_content)
-        return image_comics_content.json()["num"]
-    except HTTPError as exc:
-        logging.warning(exc)
+    image_comics_content = requests.get(url)
+    image_comics_content.raise_for_status()
+    check_for_response(image_comics_content)
+    return image_comics_content.json()["num"]
 
 
 def get_image_title_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
-    try:
-        comics_content = requests.get(url)
-        comics_content.raise_for_status()
-        check_for_response(comics_content)
-        comics_json = comics_content.json()
-        image_link = comics_json["img"]
-        title = comics_json["alt"]
-    except HTTPError as exc:
-        logging.warning(exc)
-
-    try:
-        image_comics = requests.get(image_link)
-        image_comics.raise_for_status()
-        check_for_response(image_comics)
-        with open("comics.png", "wb") as file:
-            file.write(image_comics.content)
-        return title
-    except HTTPError as exc:
-        logging.warning(exc)
+    comics_content = requests.get(url)
+    comics_content.raise_for_status()
+    check_for_response(comics_content)
+    comics_json = comics_content.json()
+    image_link = comics_json["img"]
+    title = comics_json["alt"]
+    image_comics = requests.get(image_link)
+    image_comics.raise_for_status()
+    check_for_response(image_comics)
+    with open("comics.png", "wb") as file:
+        file.write(image_comics.content)
+    return title
 
 
 def get_content_for_save_photo():
@@ -55,13 +45,11 @@ def get_content_for_save_photo():
         "group_id": group_id,
     }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
-    try:
-        url_for_upload = requests.get(url_for_upload, params=payload)
-        check_for_response(url_for_upload)
-        url_for_upload.raise_for_status()
-        get_url_save_photo = url_for_upload.json()["response"]["upload_url"]
-    except HTTPError as exc:
-        logging.warning(exc)
+    url_for_upload = requests.get(url_for_upload, params=payload)
+    check_for_response(url_for_upload)
+    url_for_upload.raise_for_status()
+    get_url_save_photo = url_for_upload.json()["response"]["upload_url"]
+
 
     with open("comics.png", "rb") as file:
         try:
@@ -88,13 +76,11 @@ def get_content_url_photos(hash, photo, server):
         "group_id": group_id,
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
-    try:
-        url_photos = requests.post(url_save_photo, params=payload_save_image)
-        url_photos.raise_for_status()
-        check_for_response(url_photos)
-        return url_photos.json()
-    except HTTPError as exc:
-        logging.warning(exc)
+    url_photos = requests.post(url_save_photo, params=payload_save_image)
+    url_photos.raise_for_status()
+    check_for_response(url_photos)
+    return url_photos.json()
+
 
 
 def posts_comics(media_id, title):
@@ -108,12 +94,11 @@ def posts_comics(media_id, title):
         "message": title,
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
-    try:
-        requests.post(url_wall_get, params=payload_wall)
-        requests.raise_for_status()
-        check_for_response(requests)
-    except HTTPError as exc:
-        logging.warning(exc)
+
+    requests.post(url_wall_get, params=payload_wall)
+    requests.raise_for_status()
+    check_for_response(requests)
+
 
 
 if __name__ == "__main__":
@@ -128,13 +113,15 @@ if __name__ == "__main__":
         filemode="w",
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
-
-    end_page = get_end_page()
-    title = get_image_title_content(end_page)
-    params_for_save_photo = get_content_for_save_photo()
-    url_photos = get_content_url_photos(
-        params_for_save_photo["hash"],
-        params_for_save_photo["photo"],
-        params_for_save_photo["server"]
-    )
-    posts_comics(url_photos['response'][0]['id'], title)
+    try:
+        end_page = get_end_page()
+        title = get_image_title_content(end_page)
+        params_for_save_photo = get_content_for_save_photo()
+        url_photos = get_content_url_photos(
+            params_for_save_photo["hash"],
+            params_for_save_photo["photo"],
+            params_for_save_photo["server"]
+        )
+        posts_comics(url_photos['response'][0]['id'], title)
+    except HTTPError as exc:
+        logging.warning(exc)
