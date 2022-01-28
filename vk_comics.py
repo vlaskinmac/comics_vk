@@ -38,7 +38,7 @@ def get_image_title_content(end_page):
     return title
 
 
-def get_content_for_save_photo():
+def get_params_for_save_photo():
     payload = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -64,7 +64,7 @@ def get_content_for_save_photo():
             os.remove("./comics.png")
 
 
-def get_content_url_photos(hash, photo, server):
+def saves_photos(hash, photo, server):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
