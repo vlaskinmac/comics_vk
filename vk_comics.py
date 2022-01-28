@@ -28,13 +28,15 @@ def get_image_title_content(end_page):
     number_comics = random.randint(1, end_page)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     try:
-        image_content = requests.get(url)
-        image_content.raise_for_status()
-        check_for_response(image_content)
+        comics_content = requests.get(url)
+        comics_content.raise_for_status()
+        check_for_response(comics_content)
+        comics_json = comics_content.json()
+        image_link = comics_json["img"]
+        title = comics_json["alt"]
     except HTTPError as exc:
         logging.warning(exc)
-    image_link = image_content.json()["img"]
-    title = image_content.json()["alt"]
+
     try:
         image_comics = requests.get(image_link)
         image_comics.raise_for_status()
