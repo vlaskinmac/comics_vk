@@ -79,13 +79,13 @@ def get_content_for_save_photo():
             os.remove("./comics.png")
 
 
-def get_content_url_photos(params_for_save_photo):
+def get_content_url_photos(hash, photo, server):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
-        "hash": params_for_save_photo["hash"],
-        "photo": params_for_save_photo["photo"],
-        "server": params_for_save_photo["server"],
+        "hash": hash,
+        "photo": photo,
+        "server": server,
         "group_id": group_id,
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
@@ -98,9 +98,8 @@ def get_content_url_photos(params_for_save_photo):
         logging.warning(exc)
 
 
-def posts_comics(url_photos, title):
+def posts_comics(media_id, title):
     signed = 1
-    media_id = url_photos['response'][0]['id']
     payload_wall = {
         "access_token": vk_token, "v": VERSION_VK,
         "filter": "suggests, postponed",
@@ -135,5 +134,9 @@ if __name__ == "__main__":
     image_comics, title = get_image_title_content(end_page)
     save_image_file_comics(image_comics)
     params_for_save_photo = get_content_for_save_photo()
-    url_photos = get_content_url_photos(params_for_save_photo)
-    posts_comics(url_photos, title)
+    url_photos = get_content_url_photos(
+        params_for_save_photo["hash"],
+        params_for_save_photo["photo"],
+        params_for_save_photo["server"]
+    )
+    posts_comics(url_photos['response'][0]['id'], title)
