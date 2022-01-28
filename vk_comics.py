@@ -41,14 +41,11 @@ def get_image_title_content(end_page):
         image_comics = requests.get(image_link)
         image_comics.raise_for_status()
         check_for_response(image_comics)
-        return image_comics, title
+        with open("comics.png", "wb") as file:
+            file.write(image_comics.content)
+        return title
     except HTTPError as exc:
         logging.warning(exc)
-
-
-def save_image_file_comics(image_comics):
-    with open("comics.png", "wb") as file:
-        file.write(image_comics.content)
 
 
 def get_content_for_save_photo():
@@ -133,8 +130,7 @@ if __name__ == "__main__":
     )
 
     end_page = get_end_page()
-    image_comics, title = get_image_title_content(end_page)
-    save_image_file_comics(image_comics)
+    title = get_image_title_content(end_page)
     params_for_save_photo = get_content_for_save_photo()
     url_photos = get_content_url_photos(
         params_for_save_photo["hash"],
