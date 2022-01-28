@@ -48,15 +48,13 @@ def get_content_for_save_photo():
     url_for_upload = requests.get(url_for_upload, params=payload)
     check_for_response(url_for_upload)
     url_for_upload.raise_for_status()
-    get_url_save_photo = url_for_upload.json()["response"]["upload_url"]
-
-
+    url_save_photo = url_for_upload.json()["response"]["upload_url"]
     with open("comics.png", "rb") as file:
         try:
             files = {
                 "photo": file,
             }
-            params_for_save_photo = requests.post(get_url_save_photo, files=files, params=payload)
+            params_for_save_photo = requests.post(url_save_photo, files=files, params=payload)
             check_for_response(params_for_save_photo)
             params_for_save_photo.raise_for_status()
             return params_for_save_photo.json()
@@ -82,7 +80,6 @@ def get_content_url_photos(hash, photo, server):
     return url_photos.json()
 
 
-
 def posts_comics(media_id, title):
     signed = 1
     payload_wall = {
@@ -98,7 +95,6 @@ def posts_comics(media_id, title):
     requests.post(url_wall_get, params=payload_wall)
     requests.raise_for_status()
     check_for_response(requests)
-
 
 
 if __name__ == "__main__":
