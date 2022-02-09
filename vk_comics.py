@@ -27,9 +27,9 @@ def get_image_title_content(end_page):
     comics_content = requests.get(url)
     comics_content.raise_for_status()
     check_for_response(comics_content)
-    comics_json = comics_content.json()
-    image_link = comics_json["img"]
-    title = comics_json["alt"]
+    comics = comics_content.json()
+    image_link = comics["img"]
+    title = comics["alt"]
     image_comics = requests.get(image_link)
     image_comics.raise_for_status()
     check_for_response(image_comics)
