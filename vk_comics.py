@@ -47,18 +47,18 @@ def get_params_for_save_photo():
     url_for_upload.raise_for_status()
     url_save_photo = url_for_upload.json()["response"]["upload_url"]
     with open("comics.png", "rb") as file:
-        try:
-            files = {
-                "photo": file,
-            }
-            params_for_save_photo = requests.post(url_save_photo, files=files, params=payload)
-            check_for_response(params_for_save_photo)
-            params_for_save_photo.raise_for_status()
-            return params_for_save_photo.json()
-        except HTTPError as exc:
-            logging.warning(exc)
-        finally:
-            os.remove("./comics.png")
+        files = {
+            "photo": file,
+        }
+    try:
+        params_for_save_photo = requests.post(url_save_photo, files=files, params=payload)
+        check_for_response(params_for_save_photo)
+        params_for_save_photo.raise_for_status()
+        return params_for_save_photo.json()
+    except HTTPError as exc:
+        logging.warning(exc)
+    finally:
+        os.remove("./comics.png")
 
 
 def saves_photos(hash, photo, server):
