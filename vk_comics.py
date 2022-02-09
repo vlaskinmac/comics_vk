@@ -112,8 +112,8 @@ if __name__ == "__main__":
     try:
         end_page = get_end_page()
         title = get_image_title_content(end_page)
-        params_for_save_photo = get_content_for_save_photo()
-        url_photos = get_content_url_photos(
+        params_for_save_photo = get_params_for_save_photo()
+        url_photos = saves_photos(
             params_for_save_photo["hash"],
             params_for_save_photo["photo"],
             params_for_save_photo["server"]
