@@ -61,7 +61,7 @@ def get_params_for_save_photo():
         os.remove("./comics.png")
 
 
-def saves_photos(hash, photo, server):
+def saves_photo(hash, photo, server):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         end_page = get_end_page()
         title = get_image_title_content(end_page)
         params_for_save_photo = get_params_for_save_photo()
-        url_photos = saves_photos(
+        url_photos = saves_photo(
             params_for_save_photo["hash"],
             params_for_save_photo["photo"],
             params_for_save_photo["server"]
