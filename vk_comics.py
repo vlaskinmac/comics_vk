@@ -9,8 +9,9 @@ from requests import HTTPError
 
 
 def check_for_response(response):
-    if HTTPError().response:
-        raise HTTPError(f'{response} - {HTTPError.__name__}')
+    if 'error' in response:
+        error_message = f"Error {response['error']['error_msg']}"
+        raise HTTPError(error_message)
 
 
 def get_end_page():
