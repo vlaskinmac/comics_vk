@@ -17,7 +17,6 @@ def get_end_page():
     url = f"https://xkcd.com/info.0.json"
     image_comics_content = requests.get(url)
     image_comics_content.raise_for_status()
-    check_for_response(image_comics_content)
     return image_comics_content.json()["num"]
 
 
@@ -26,13 +25,11 @@ def get_image_title_content(end_page):
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     comics_content = requests.get(url)
     comics_content.raise_for_status()
-    check_for_response(comics_content)
     comics = comics_content.json()
     image_link = comics["img"]
     title = comics["alt"]
     image_comics = requests.get(image_link)
     image_comics.raise_for_status()
-    check_for_response(image_comics)
     with open("comics.png", "wb") as file:
         file.write(image_comics.content)
     return title
