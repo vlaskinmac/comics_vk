@@ -45,13 +45,13 @@ def get_params_for_save_photo(vk_token, VERSION_VK, group_id):
     url_for_upload = requests.get(url_for_upload, params=payload)
     check_for_response(url_for_upload)
     url_for_upload.raise_for_status()
-    url_save_photo = url_for_upload.json()["response"]["upload_url"]
+    upload_url = url_for_upload.json()["response"]["upload_url"]
     with open("comics.png", "rb") as file:
         files = {
             "photo": file,
         }
     try:
-        params_for_save_photo = requests.post(url_save_photo, files=files, params=payload)
+        params_for_save_photo = requests.post(upload_url, files=files, params=payload)
         check_for_response(params_for_save_photo)
         params_for_save_photo.raise_for_status()
         return params_for_save_photo.json()
