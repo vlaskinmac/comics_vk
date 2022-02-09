@@ -35,7 +35,7 @@ def get_image_title_content(end_page):
     return title
 
 
-def get_params_for_save_photo():
+def get_params_for_save_photo(vk_token, VERSION_VK, group_id):
     payload = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -61,7 +61,7 @@ def get_params_for_save_photo():
         os.remove("./comics.png")
 
 
-def saves_photo(hash, photo, server):
+def saves_photo(hash, photo, server, vk_token, VERSION_VK, group_id):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
@@ -77,7 +77,7 @@ def saves_photo(hash, photo, server):
     return url_photos.json()
 
 
-def posts_comics(media_id, title):
+def posts_comics(media_id, title, vk_token, VERSION_VK, group_id):
     signed = 1
     payload_wall = {
         "access_token": vk_token, "v": VERSION_VK,
@@ -88,7 +88,6 @@ def posts_comics(media_id, title):
         "message": title,
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
-
     requests.post(url_wall_get, params=payload_wall)
     requests.raise_for_status()
     check_for_response(requests)
@@ -109,12 +108,22 @@ if __name__ == "__main__":
     try:
         end_page = get_end_page()
         title = get_image_title_content(end_page)
-        params_for_save_photo = get_params_for_save_photo()
+        params_for_save_photo = get_params_for_save_photo(vk_token, VERSION_VK, group_id)
+
         url_photos = saves_photo(
             params_for_save_photo["hash"],
             params_for_save_photo["photo"],
-            params_for_save_photo["server"]
+            params_for_save_photo["server"],
+            vk_token,
+            VERSION_VK,
+            group_id,
         )
-        posts_comics(url_photos['response'][0]['id'], title)
+        posts_comics(
+            url_photos['response'][0]['id'],
+            title,
+            vk_token,
+            VERSION_VK,
+            group_id,
+        )
     except HTTPError as exc:
         logging.warning(exc)
