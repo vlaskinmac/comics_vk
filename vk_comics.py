@@ -62,11 +62,11 @@ def get_params_for_save_photo(vk_token, VERSION_VK, group_id):
         os.remove("./comics.png")
 
 
-def saves_photo(hash, photo, server, vk_token, VERSION_VK, group_id):
+def saves_photo(hash_code, photo, server, vk_token, VERSION_VK, group_id):
     payload_save_image = {
         "access_token": vk_token,
         "v": VERSION_VK,
-        "hash": hash,
+        "hash_code": hash_code,
         "photo": photo,
         "server": server,
         "group_id": group_id,
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         params_for_save_photo = get_params_for_save_photo(vk_token, VERSION_VK, group_id)
 
         url_photos = saves_photo(
-            params_for_save_photo["hash"],
+            params_for_save_photo["hash_code"],
             params_for_save_photo["photo"],
             params_for_save_photo["server"],
             vk_token,
