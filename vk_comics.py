@@ -51,8 +51,8 @@ def get_params_for_save_photo(vk_token, version_vk, group_id):
         files = {
             "photo": file,
         }
-    try:
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
+    try:
         check_for_response(params_for_save_photo)
         params_for_save_photo.raise_for_status()
         return params_for_save_photo.json()
