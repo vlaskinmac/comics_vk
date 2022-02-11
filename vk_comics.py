@@ -36,10 +36,10 @@ def get_image_title_content(end_page_comics):
     return title
 
 
-def get_params_for_save_photo(vk_token, VERSION_VK, group_id):
+def get_params_for_save_photo(vk_token, version_vk, group_id):
     payload = {
         "access_token": vk_token,
-        "v": VERSION_VK,
+        "v": version_vk,
         "group_id": group_id,
     }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
@@ -62,10 +62,10 @@ def get_params_for_save_photo(vk_token, VERSION_VK, group_id):
         os.remove("./comics.png")
 
 
-def saves_photo(hash_code, photo, server, vk_token, VERSION_VK, group_id):
+def saves_photo(hash_code, photo, server, vk_token, version_vk, group_id):
     payload_save_image = {
         "access_token": vk_token,
-        "v": VERSION_VK,
+        "v": version_vk,
         "hash_code": hash_code,
         "photo": photo,
         "server": server,
@@ -78,10 +78,10 @@ def saves_photo(hash_code, photo, server, vk_token, VERSION_VK, group_id):
     return url_photos.json()
 
 
-def posts_comics(media_id, title, vk_token, VERSION_VK, group_id):
+def posts_comics(media_id, title, vk_token, version_vk, group_id):
     signed = 1
     payload_wall = {
-        "access_token": vk_token, "v": VERSION_VK,
+        "access_token": vk_token, "v": version_vk,
         "filter": "suggests, postponed",
         "from_group": signed,
         "owner_id": f"-{group_id}",
@@ -98,8 +98,8 @@ if __name__ == "__main__":
     load_dotenv()
     vk_token = os.getenv("VK_TOKEN")
     group_id = os.getenv("GROUP_ID")
-    user_id = os.getenv("user_id")
-    VERSION_VK = 5.131
+    user_id = os.getenv("USER_ID")
+    version_vk = 5.131
     logging.basicConfig(
         level=logging.WARNING,
         filename="logs.log",
@@ -109,21 +109,21 @@ if __name__ == "__main__":
     try:
         end_page_comics = get_end_page_comics()
         title = get_image_title_content(end_page_comics)
-        params_for_save_photo = get_params_for_save_photo(vk_token, VERSION_VK, group_id)
+        params_for_save_photo = get_params_for_save_photo(vk_token, version_vk, group_id)
 
         url_photos = saves_photo(
             params_for_save_photo["hash_code"],
             params_for_save_photo["photo"],
             params_for_save_photo["server"],
             vk_token,
-            VERSION_VK,
+            version_vk,
             group_id,
         )
         posts_comics(
             url_photos['response'][0]['id'],
             title,
             vk_token,
-            VERSION_VK,
+            version_vk,
             group_id,
         )
     except HTTPError as exc:
