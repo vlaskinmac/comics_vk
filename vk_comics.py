@@ -14,15 +14,15 @@ def check_for_response(response):
         raise HTTPError(error_message)
 
 
-def get_end_page():
+def get_end_page_comics():
     url = f"https://xkcd.com/info.0.json"
     image_comics_content = requests.get(url)
     image_comics_content.raise_for_status()
     return image_comics_content.json()["num"]
 
 
-def get_image_title_content(end_page):
-    number_comics = random.randint(1, end_page)
+def get_image_title_content(end_page_comics):
+    number_comics = random.randint(1, end_page_comics)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     comics_content = requests.get(url)
     comics_content.raise_for_status()
@@ -107,8 +107,8 @@ if __name__ == "__main__":
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
     try:
-        end_page = get_end_page()
-        title = get_image_title_content(end_page)
+        end_page_comics = get_end_page_comics()
+        title = get_image_title_content(end_page_comics)
         params_for_save_photo = get_params_for_save_photo(vk_token, VERSION_VK, group_id)
 
         url_photos = saves_photo(
