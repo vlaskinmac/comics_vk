@@ -72,10 +72,10 @@ def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
         "group_id": group_id,
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
-    url_photos = requests.post(url_save_photo, params=payload_save_image)
-    url_photos.raise_for_status()
-    check_for_response(url_photos)
-    return url_photos.json()
+    response = requests.post(url_save_photo, params=payload_save_image)
+    response.raise_for_status()
+    check_for_response(response)
+    return response.json()
 
 
 def posts_comics(media_id, title, vk_token, version_vk, group_id):
@@ -89,9 +89,9 @@ def posts_comics(media_id, title, vk_token, version_vk, group_id):
         "message": title,
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
-    send_payload_wall = requests.post(url_wall_get, params=payload_wall)
-    send_payload_wall.raise_for_status()
-    check_for_response(send_payload_wall)
+    response_payload_wall = requests.post(url_wall_get, params=payload_wall)
+    response_payload_wall.raise_for_status()
+    check_for_response(response_payload_wall)
 
 
 if __name__ == "__main__":
