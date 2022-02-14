@@ -89,9 +89,9 @@ def posts_comics(media_id, title, vk_token, version_vk, group_id):
         "message": title,
     }
     url_wall_get = f"https://api.vk.com/method/wall.post"
-    requests.post(url_wall_get, params=payload_wall)
-    requests.raise_for_status()
-    check_for_response(requests)
+    send_payload_wall = requests.post(url_wall_get, params=payload_wall)
+    send_payload_wall.raise_for_status()
+    check_for_response(send_payload_wall)
 
 
 if __name__ == "__main__":
