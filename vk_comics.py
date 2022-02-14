@@ -16,17 +16,17 @@ def check_for_response(response):
 
 def get_comics_end_page():
     url = f"https://xkcd.com/info.0.json"
-    image_comics_content = requests.get(url)
-    image_comics_content.raise_for_status()
-    return image_comics_content.json()["num"]
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()["num"]
 
 
 def get_image_title_content(end_page_comics):
     number_comics = random.randint(1, end_page_comics)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
-    comics_content = requests.get(url)
-    comics_content.raise_for_status()
-    comics = comics_content.json()
+    response = requests.get(url)
+    response.raise_for_status()
+    comics = response.json()
     image_link = comics["img"]
     title = comics["alt"]
     image_comics = requests.get(image_link)
@@ -43,10 +43,10 @@ def get_params_for_save_photo(vk_token, version_vk, group_id):
         "group_id": group_id,
     }
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
-    response_upload = requests.get(url_for_upload, params=payload)
-    response_upload.raise_for_status()
-    check_for_response(response_upload)
-    upload_url = response_upload.json()["response"]["upload_url"]
+    response = requests.get(url_for_upload, params=payload)
+    response.raise_for_status()
+    check_for_response(response)
+    upload_url = response.json()["response"]["upload_url"]
     with open("comics.png", "rb") as file:
         files = {
             "photo": file,
