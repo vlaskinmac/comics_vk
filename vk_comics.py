@@ -52,10 +52,13 @@ def get_params_for_save_photo(vk_token, version_vk, group_id):
             "photo": file,
         }
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
-    os.remove("./comics.png")
     check_for_response(params_for_save_photo)
     params_for_save_photo.raise_for_status()
     return params_for_save_photo.json()
+
+
+def deletes_file():
+    os.remove("./comics.png")
 
 
 def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
