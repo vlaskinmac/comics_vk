@@ -52,10 +52,9 @@ def get_params_for_save_photo(vk_token, version_vk, group_id):
             "photo": file,
         }
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
-    os.remove("./comics.png")
     check_for_response(params_for_save_photo)
     params_for_save_photo.raise_for_status()
-    return params_for_save_photo.json()
+    return file, params_for_save_photo.json()
 
 
 def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
@@ -103,7 +102,7 @@ if __name__ == "__main__":
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
     try:
-        end_page_comics = get_comics_end_page()
+        file, end_page_comics = get_comics_end_page()
         title = get_image_title_content(end_page_comics)
         params_for_save_photo = get_params_for_save_photo(vk_token, version_vk, group_id)
 
@@ -124,4 +123,7 @@ if __name__ == "__main__":
         )
     except HTTPError as exc:
         logging.warning(exc)
+    finally:
+        os.remove(file)
+
 
