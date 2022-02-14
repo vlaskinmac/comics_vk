@@ -14,7 +14,7 @@ def check_for_response(response):
         raise HTTPError(error_message)
 
 
-def get_end_page_comics():
+def get_comics_end_page():
     url = f"https://xkcd.com/info.0.json"
     image_comics_content = requests.get(url)
     image_comics_content.raise_for_status()
