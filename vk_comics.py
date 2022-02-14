@@ -31,7 +31,8 @@ def get_image_title_content(end_page_comics):
     title = comics["alt"]
     image_comics = requests.get(image_link)
     image_comics.raise_for_status()
-    with open("comics.png", "wb") as file:
+    img = "comics.png"
+    with open(img, "wb") as file:
         file.write(image_comics.content)
     return title
 
