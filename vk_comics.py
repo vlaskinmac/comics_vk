@@ -21,7 +21,7 @@ def get_comics_end_page():
     return response.json()["num"]
 
 
-def get_image_title_content(end_page_comics):
+def get_image_title_content(end_page_comics, img_name):
     number_comics = random.randint(1, end_page_comics)
     url = f"https://xkcd.com/{number_comics}/info.0.json"
     response = requests.get(url)
@@ -31,13 +31,13 @@ def get_image_title_content(end_page_comics):
     title = comics["alt"]
     image_comics = requests.get(image_link)
     image_comics.raise_for_status()
-    img = "comics.png"
-    with open(img, "wb") as file:
+
+    with open(img_name, "wb") as file:
         file.write(image_comics.content)
     return title
 
 
-def get_params_for_save_photo(vk_token, version_vk, group_id):
+def get_params_for_save_photo(vk_token, version_vk, group_id, img_name):
     payload = {
         "access_token": vk_token,
         "v": version_vk,
@@ -48,14 +48,14 @@ def get_params_for_save_photo(vk_token, version_vk, group_id):
     response.raise_for_status()
     check_for_response(response)
     upload_url = response.json()["response"]["upload_url"]
-    with open("comics.png", "rb") as file:
+    with open(img_name, "rb") as file:
         files = {
             "photo": file,
         }
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
     params_for_save_photo.raise_for_status()
     check_for_response(params_for_save_photo)
-    return params_for_save_photo.json(), file
+    return params_for_save_photo.json()
 
 
 def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
@@ -102,10 +102,11 @@ if __name__ == "__main__":
         filemode="w",
         format="%(asctime)s - [%(levelname)s] - %(message)s",
     )
+    img_name = "comics.png"
     try:
         end_page_comics = get_comics_end_page()
-        title = get_image_title_content(end_page_comics)
-        params_for_save_photo, file = get_params_for_save_photo(vk_token, version_vk, group_id)
+        title = get_image_title_content(end_page_comics, img_name)
+        params_for_save_photo = get_params_for_save_photo(vk_token, version_vk, group_id, img_name)
         url_photos = save_photo(
             params_for_save_photo["hash_code"],
             params_for_save_photo["photo"],
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     except HTTPError as exc:
         logging.warning(exc)
     finally:
-        os.remove(file)
+        os.remove(img_name)
 
 
 
