@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 from requests import HTTPError
 
 
-def check_for_response(check_error):
-    response = check_error.json()
+def check_for_response(response):
+    response = response.json()
     if 'error' in response:
         error_message = f"Error {response['error']['error_msg']}"
         raise HTTPError(error_message)
