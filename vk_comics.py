@@ -46,17 +46,17 @@ def get_params_for_save_photo(vk_token, version_vk, group_id, img_name):
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     response = requests.get(url_for_upload, params=payload)
     response.raise_for_status()
-    check_response = response.json()
-    check_for_response(check_response)
-    upload_url = response.json()["response"]["upload_url"]
+    response_content = response.json()
+    check_for_response(response_content)
+    upload_url = response_content["response"]["upload_url"]
     with open(img_name, "rb") as file:
         files = {
             "photo": file,
         }
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
     params_for_save_photo.raise_for_status()
-    check_response = params_for_save_photo.json()
-    check_for_response(check_response)
+    response_content = params_for_save_photo.json()
+    check_for_response(response_content)
     return params_for_save_photo.json()
 
 
@@ -71,9 +71,10 @@ def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
     }
     url_save_photo = f"https://api.vk.com/method/photos.saveWallPhoto"
     response = requests.post(url_save_photo, params=payload_save_image)
+    response_content = response.json()
     response.raise_for_status()
-    check_for_response(response)
-    return response.json()
+    check_for_response(response_content)
+    return response_content
 
 
 def posts_comics(media_id, title, vk_token, version_vk, group_id):
@@ -89,8 +90,8 @@ def posts_comics(media_id, title, vk_token, version_vk, group_id):
     url_wall_get = f"https://api.vk.com/method/wall.post"
     response_payload_wall = requests.post(url_wall_get, params=payload_wall)
     response_payload_wall.raise_for_status()
-    check_response = response_payload_wall.json()
-    check_for_response(check_response)
+    response_content = response_payload_wall.json()
+    check_for_response(response_content)
 
 
 if __name__ == "__main__":
