@@ -9,7 +9,6 @@ from requests import HTTPError
 
 
 def check_for_response(response):
-    response = response.json()
     if 'error' in response:
         error_message = f"Error {response['error']['error_msg']}"
         raise HTTPError(error_message)
@@ -47,7 +46,8 @@ def get_params_for_save_photo(vk_token, version_vk, group_id, img_name):
     url_for_upload = f"https://api.vk.com/method/photos.getWallUploadServer"
     response = requests.get(url_for_upload, params=payload)
     response.raise_for_status()
-    check_for_response(response)
+    check_response = response.json()
+    check_for_response(check_response)
     upload_url = response.json()["response"]["upload_url"]
     with open(img_name, "rb") as file:
         files = {
@@ -55,7 +55,8 @@ def get_params_for_save_photo(vk_token, version_vk, group_id, img_name):
         }
         params_for_save_photo = requests.post(upload_url, files=files, params=payload)
     params_for_save_photo.raise_for_status()
-    check_for_response(params_for_save_photo)
+    check_response = params_for_save_photo.json()
+    check_for_response(check_response)
     return params_for_save_photo.json()
 
 
@@ -88,7 +89,8 @@ def posts_comics(media_id, title, vk_token, version_vk, group_id):
     url_wall_get = f"https://api.vk.com/method/wall.post"
     response_payload_wall = requests.post(url_wall_get, params=payload_wall)
     response_payload_wall.raise_for_status()
-    check_for_response(response_payload_wall)
+    check_response = response_payload_wall.json()
+    check_for_response(check_response)
 
 
 if __name__ == "__main__":
