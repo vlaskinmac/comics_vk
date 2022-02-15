@@ -18,7 +18,8 @@ def get_comics_end_page():
     url = f"https://xkcd.com/info.0.json"
     response = requests.get(url)
     response.raise_for_status()
-    return response.json()["num"]
+    response_content = response.json()
+    return response_content["num"]
 
 
 def get_image_title_content(end_page_comics, img_name):
