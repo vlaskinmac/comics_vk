@@ -58,7 +58,7 @@ def get_params_for_save_photo(vk_token, version_vk, group_id, img_name):
     params_for_save_photo.raise_for_status()
     response_content = params_for_save_photo.json()
     check_for_response(response_content)
-    return params_for_save_photo.json()
+    return response_content
 
 
 def save_photo(hash_code, photo, server, vk_token, version_vk, group_id):
